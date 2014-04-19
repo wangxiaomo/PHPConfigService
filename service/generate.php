@@ -33,7 +33,7 @@ function generator(){
         $snap_config = $redis->get($app);
         $redis->set($app, $config['serialized']);
         if(md5($snap_config) !== $config['hash']){
-            $redis->publish($pub_channel, $app);
+            $redis->publish($pub_channel, $app . '#' . $config['serialized']);
         }
     }
     $contents = serialize($global_config);

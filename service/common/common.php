@@ -44,7 +44,8 @@ function load_config_files($path=CONF_PATH){
         $configurations[$namespace]['hash'] = md5($serialized_content);
         $configurations[$namespace]['serialized'] = $serialized_content;
     }
-    return $configurations;
+    $hash = md5(serialize($configurations));
+    return array($hash, $configurations);
 }
 
 

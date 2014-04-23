@@ -21,7 +21,7 @@
 
 #### 一些问题
 
-1. redis 如何存储
-2. local config 刷新
-3. interface debug
-4. version lock
+- [x] redis 如何存储
+- [x] local config 刷新
+- [x] interface debug
+- [ ] version lock

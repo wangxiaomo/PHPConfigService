@@ -12,10 +12,15 @@ function get_redis(){
     $configuration['PREFIX'] = $configuration['PREFIX']? $configuration['PREFIX']: '_php_config_';
 
     $redis = new Redis();
-    $redis->pconnect($configuration['HOST'], $configuration['PORT']);
+    if($redis->pconnect($configuration['HOST'], $configuration['PORT']) === false){
+        throw new RedisGoneException;
+    }
     $redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
     $redis->setOption(Redis::OPT_PREFIX, $configuration['PREFIX']);
     $redis->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY);
 
     return $redis;
 }
+
+
+class RedisGoneException extends Exception {}

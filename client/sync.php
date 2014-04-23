@@ -1,5 +1,6 @@
 <?php
-//ini_set('default_socket_timeout', -1);
+
+ini_set('default_socket_timeout', -1);
 
 // sync clients used for PHPConfigService
 define('VERSION', '1.0.1');
@@ -14,6 +15,15 @@ define('CONFIG_EXT', '.inc' . EXT);
 
 include COMMON_PATH . 'common.php';
 include COMMON_PATH . 'redis.php';
+
+
+function handle_exception($e){
+    if(is_a($e, 'RedisException')){
+        register_redis_subscribe();
+    }else{
+        throw $e;
+    }
+}
 
 
 function handle_sub_event(&$redis, $channel, $msg){
@@ -45,7 +55,12 @@ function setup_configuration(&$redis){
 }
 
 
-$sub_channel = load_redis_config()['CHANNEL'];
-$redis = get_redis();
-setup_configuration($redis);
-$redis->subscribe(array($sub_channel), 'handle_sub_event');
+function register_redis_subscribe(){
+    $sub_channel = load_redis_config()['CHANNEL'];
+    $redis = get_redis();
+    setup_configuration($redis);
+    $redis->subscribe(array($sub_channel), 'handle_sub_event');
+}
+
+set_exception_handler('handle_exception');
+register_redis_subscribe();
